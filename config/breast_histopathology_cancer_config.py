@@ -21,11 +21,9 @@ OUTPUT_PATH = "C://Users//ajf97//Documents//TFG//breast_histopathology_cancer//o
 # Ruta del archivo de la media RGB del dataset
 MEAN_PATH = "C://Users//ajf97//Documents//TFG//breast_histopathology_cancer//output//breast_histopathology_cancer_mean.json"
 
-#CLASS_WEIGHTS_PATH = "C://Users//ajf97//Documents//TFG//breast_histopathology_cancer//output//class_weights.json"
-
 # Ruta de los pesos de la arquitectura AlexNet preentrenados en Imagenet
-#ALEXNET_WEIGHTS_PATH = "C://Users//ajf97//Documents//TFG//breast_histopathology_cancer//weights//alexnet_model.h5"
 ALEXNET_MODEL_PATH = "C://Users//ajf97//Documents//TFG//breast_histopathology_cancer//output//alexnet_model.h5"
 
-# Ruta deL modelo de la arquitectura VGG16 preentrenados en Imagenet
-VGG16_MODEL_PATH = "C://Users//ajf97//Documents//TFG//breast_histopathology_cancer//output//vgg16_model.h5"
+# Ruta de los modelos
+VGG16_MODEL_PATH = OUTPUT_PATH + "//vgg16_model.h5"
+VGG19_MODEL_PATH = OUTPUT_PATH + "//vgg19_model.h5"

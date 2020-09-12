@@ -41,15 +41,15 @@ class AlexNet:
         model.add(Conv2D(384, (3, 3), padding="same",
                          kernel_regularizer=l2(reg)))
         model.add(Activation("relu"))
-        model.add(BatchNormalization(axis=1))
+        model.add(BatchNormalization(axis=-1))
         model.add(Conv2D(384, (3, 3), padding="same",
                          kernel_regularizer=l2(reg)))
         model.add(Activation("relu"))
-        model.add(BatchNormalization(axis=1))
+        model.add(BatchNormalization(axis=-1))
         model.add(Conv2D(256, (3, 3), padding="same",
                          kernel_regularizer=l2(reg)))
         model.add(Activation("relu"))
-        model.add(BatchNormalization(axis=1))
+        model.add(BatchNormalization(axis=-1))
         model.add(MaxPooling2D(pool_size=(3, 3)))
         model.add(Dropout(0.25))
 

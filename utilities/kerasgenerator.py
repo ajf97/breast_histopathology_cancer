@@ -13,12 +13,14 @@ import h5py
 
 class KerasGenerator:
 
-    def __init__(self, db_path, batch_size, preprocessors=[]):
+    def __init__(self, db_path, batch_size, preprocessors=[],
+                 data_augmentation=None):
 
         self.preprocessors = preprocessors
         self.batch_size = batch_size
         self.db = h5py.File(db_path, "r")
         self.num_images = self.db["images"].shape[0]
+        self.data_augmentation = data_augmentation
 
     def generate_image_batch(self):
 
@@ -50,6 +52,12 @@ class KerasGenerator:
                     labels_categorized.append(label)
 
                 labels = np.array(labels_categorized)
+
+                # Apply data augmentation (optional)
+                if self.data_augmentation is not None:
+                    (images, labels) = next(self.data_augmentation.flow(images,
+                                                                        labels,
+                                                                        batch_size=self.batch_size))
 
                 yield (images, labels)
 

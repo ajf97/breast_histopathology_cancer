@@ -19,19 +19,21 @@ import json
 
 # %% Loading model
 
-db = h5py.File("C:\\Users\\ajf97\\Documents\\TFG\\large_dataset_hdf5\\train.hdf5", "r")
-model = load_model(config.VGG16_MODEL_PATH)
+#db = h5py.File("C:\\Users\\ajf97\\Documents\\TFG\\large_dataset_hdf5\\train.hdf5", "r")
+db = h5py.File(config.TEST_HDF5, "r")
+model = load_model(config.VGG19_MODEL_PATH)
 values_rgb = json.loads(open(config.MEAN_PATH).read())
 
 
 # %% Define preprocessors and generator to use
 
-batch_size = 64
+batch_size = 32
 
 rp = preprocessors.ResizePreprocessor(224, 224)
 # mzo = preprocessors.MeanZeroOnePreprocessor()
 mrgb = preprocessors.MeanRGBPreprocessor(values_rgb)
-kg = KerasGenerator("C:\\Users\\ajf97\\Documents\\TFG\\large_dataset_hdf5\\train.hdf5", batch_size, preprocessors=[rp, mrgb])
+#kg = KerasGenerator("C:\\Users\\ajf97\\Documents\\TFG\\large_dataset_hdf5\\train.hdf5", batch_size, preprocessors=[rp, mrgb])
+kg = KerasGenerator(config.TEST_HDF5, batch_size, preprocessors=[rp, mrgb])
 
 # %% Evaluate model
 

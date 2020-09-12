@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 __author__ = "Alejandro Jerónimo Fuentes"
-__date__ = "21/08/2020"
+__date__ = "31/08/2020"
 
 
 # %% Import neccesary packages
 
-from keras.applications import VGG16
+from keras.applications import VGG19
 from keras.optimizers import SGD, RMSprop, Adam
 from utilities.fclayer import FCLayer
 from keras.layers import Input
@@ -18,15 +18,15 @@ import matplotlib.pylab as plt
 import numpy as np
 import json
 
-# %% Load values RGB
+# %% Get class weights
 
 values_rgb = json.loads(open(config.MEAN_PATH).read())
 
 
 # %% Define preprocessors and generators
 
-batch_size = 32
-number_epochs = 20
+batch_size = 64
+number_epochs = 15
 
 aug = ImageDataGenerator(horizontal_flip=True,
                          vertical_flip=True,
@@ -35,7 +35,6 @@ aug = ImageDataGenerator(horizontal_flip=True,
                          )
 
 rp = preprocessors.ResizePreprocessor(224, 224)
-#mzon = preprocessors.MeanZeroOnePreprocessor()
 mrgb = preprocessors.MeanRGBPreprocessor(values_rgb)
 
 trainGen = KerasGenerator(config.TRAIN_HDF5, batch_size,
@@ -44,14 +43,14 @@ valGen = KerasGenerator(config.VAL_HDF5, batch_size, preprocessors=[rp, mrgb])
 
 # %% Define base model
 
-baseModel = VGG16(weights="imagenet", include_top=False,
+baseModel = VGG19(weights="imagenet", include_top=False,
                   input_tensor=Input(shape=(224, 224, 3)))
 
 head = FCLayer.build(baseModel, 256)
 
 model = Model(inputs=baseModel.input, outputs=head)
 
-# %% Freeze every layer in original VGG16 architecture
+# %% Freeze every layer in original VGG19 architecture
 
 for layer in baseModel.layers:
     layer.trainable = False
@@ -70,17 +69,17 @@ H1 = model.fit(trainGen.generate_image_batch(),
                validation_data=valGen.generate_image_batch(),
                validation_steps=valGen.num_images // batch_size,
                epochs=number_epochs,
-               max_queue_size=batch_size * 2,
+               max_queue_size=batch_size,
                verbose=1
                )
 
 
 # %% Unfreeze some CONV layers for learn more features
 
-for layer in baseModel.layers[15:]:
+for layer in baseModel.layers[17:]:
     layer.trainable = True
 
-opt = SGD(lr=0.001)
+opt = SGD(lr=0.01)
 model.compile(loss="categorical_crossentropy", optimizer=opt,
               metrics=["accuracy"])
 
@@ -97,7 +96,7 @@ H2 = model.fit(trainGen.generate_image_batch(),
 
 # %% Save model
 
-model.save(config.VGG16_MODEL_PATH)
+model.save(config.VGG19_MODEL_PATH)
 
 # %% Show graphics
 

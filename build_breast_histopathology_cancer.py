@@ -40,7 +40,7 @@ trainPaths = np.array(trainPaths).reshape((-1, 1))
 trainLabels = np.array(trainLabels)
 
 X, y = make_imbalance(trainPaths, trainLabels,
-                      sampling_strategy={0: 10000, 1: 10000},
+                      sampling_strategy={0: 18000, 1: 18000},
                       random_state=42)
 X = X.flatten()
 
@@ -96,7 +96,6 @@ for (dtype, paths, labels, hdf5_path) in dataset:
         image = cv2.cvtColor(image, cv2.COLOR_BGRA2RGB)
         image = np.expand_dims(image, axis=0)
 
-
         # Escribimos la imagen en la base de datos hdf5
         hdf5.add([image], [label])
 
@@ -109,33 +108,3 @@ D = {"R": np.mean(R), "G": np.mean(G), "B": np.mean(B)}
 f = open(config.MEAN_PATH, "w")
 f.write(json.dumps(D))
 f.close()
-
-# %% Calculamos los pesos de las clases para corregir el desbalanceo
-
-# class_weights = class_weight.compute_class_weight(class_weight='balanced',
-#                                                   classes=np.unique(trainLabels),
-#                                                   y=trainLabels)
-
-
-# print("[INFO] Calculando pesos de las clases")
-# D = {"0": class_weights[0], "1": class_weights[1]}
-# f = open(config.CLASS_WEIGHTS_PATH, "w")
-# f.write(json.dumps(D))
-# f.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
