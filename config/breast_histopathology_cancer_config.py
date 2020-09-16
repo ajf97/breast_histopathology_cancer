@@ -19,7 +19,10 @@ VAL_HDF5 = "C://Users//ajf97//Documents//TFG//dataset//hdf5//val.hdf5"
 OUTPUT_PATH = "C://Users//ajf97//Documents//TFG//breast_histopathology_cancer//output"
 
 # Ruta del archivo de la media RGB del dataset
-MEAN_PATH = "C://Users//ajf97//Documents//TFG//breast_histopathology_cancer//output//breast_histopathology_cancer_mean.json"
+MEAN_PATH = OUTPUT_PATH + "//breast_histopathology_cancer_mean.json"
+
+# Ruta del dataframe asociado al dataset completo
+DATAFRAME_PATH = OUTPUT_PATH + "//dataframe.csv"
 
 # Ruta de los pesos de la arquitectura AlexNet preentrenados en Imagenet
 ALEXNET_MODEL_PATH = "C://Users//ajf97//Documents//TFG//breast_histopathology_cancer//output//alexnet_model.h5"

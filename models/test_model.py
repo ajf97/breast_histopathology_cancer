@@ -51,11 +51,6 @@ print(classification_report(testY.argmax(axis=1),
                             predictions.argmax(axis=1),
                             target_names=["non-cancer", "cancer"]))
 
-# %% Print rank-1 metric
-
-rank1 = rank1_accuracy(predictions, db["labels"])
-print("Rank-1: ", rank1)
-
 # %% Plot confussioin matrix
 
 plot_confusion_matrix(testY.argmax(axis=1),

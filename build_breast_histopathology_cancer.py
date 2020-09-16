@@ -10,6 +10,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.utils import class_weight
 from imblearn.datasets import make_imbalance
 import numpy as np
+import pandas as pd
 import json
 import cv2
 import os
@@ -19,15 +20,33 @@ import os
 trainPaths = []
 trainLabels = []
 
+# Definición del dataframe
+
+df = pd.DataFrame(columns=["patient_id", "x", "y", "target", "path"])
+i = 1
+
 for root, dirs, files in os.walk(config.IMAGE_PATH):
     if files is not []:
         for imageFile in files:
 
-            filename = os.path.join(root, imageFile)
+            filename_path = os.path.join(root, imageFile)
             label = root.split(os.sep)[-1]
 
-            trainPaths.append(filename)
+            # Parsear nombre de archivo para el dataframe
+            filename = filename_path.split("\\")[-1]
+            filename = filename.split("_")
+
+            patient_id = filename[0]
+            coord_x = int(filename[2][1:])
+            coord_y = int(filename[3][1:])
+
+            row = [patient_id, coord_x, coord_y, label, filename_path]
+
+            trainPaths.append(filename_path)
             trainLabels.append(label)
+            df.loc[len(df)] = row
+
+df.to_csv(config.DATAFRAME_PATH, index=False)
 
 # %% Normalizar etiquetas
 
@@ -40,7 +59,7 @@ trainPaths = np.array(trainPaths).reshape((-1, 1))
 trainLabels = np.array(trainLabels)
 
 X, y = make_imbalance(trainPaths, trainLabels,
-                      sampling_strategy={0: 18000, 1: 18000},
+                      sampling_strategy={0: 10000, 1: 10000},
                       random_state=42)
 X = X.flatten()
 
@@ -57,7 +76,8 @@ split = train_test_split(X, y,
 
 split = train_test_split(trainPaths, trainLabels,
                          test_size=config.NUM_VAL_IMAGES,
-                         stratify=trainLabels)
+                         stratify=trainLabels,
+                         random_state=42)
 
 (trainPaths, valPaths, trainLabels, valLabels) = split
 
