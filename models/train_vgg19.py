@@ -6,7 +6,7 @@ __date__ = "31/08/2020"
 # %% Import neccesary packages
 
 from keras.applications import VGG19
-from keras.optimizers import SGD, RMSprop, Adam
+from keras.optimizers import SGD
 from utilities.fclayer import FCLayer
 from keras.layers import Input
 from keras.models import Model

@@ -24,9 +24,10 @@ MEAN_PATH = OUTPUT_PATH + "//breast_histopathology_cancer_mean.json"
 # Ruta del dataframe asociado al dataset completo
 DATAFRAME_PATH = OUTPUT_PATH + "//dataframe.csv"
 
-# Ruta de los pesos de la arquitectura AlexNet preentrenados en Imagenet
-ALEXNET_MODEL_PATH = "C://Users//ajf97//Documents//TFG//breast_histopathology_cancer//output//alexnet_model.h5"
 
 # Ruta de los modelos
 VGG16_MODEL_PATH = OUTPUT_PATH + "//vgg16_model.h5"
 VGG19_MODEL_PATH = OUTPUT_PATH + "//vgg19_model.h5"
+ALEXNET_MODEL_PATH = OUTPUT_PATH + "//alexnet_model.h5"
+INCEPTIONV3_MODEL_PATH = OUTPUT_PATH + "//inceptionv3_model.h5"
+RESNET50_MODEL_PATH = OUTPUT_PATH + "//resnet50_model.h5"

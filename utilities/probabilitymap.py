@@ -74,7 +74,7 @@ def visualise_breast_tissue(patient_id, df = df, model = None, crop_dimension = 
 
 # %% Generate WSI
 values_rgb = json.loads(open(config.MEAN_PATH).read())
-model = load_model(config.VGG19_MODEL_PATH)
-patient_id = 14154
-img = visualise_breast_tissue(patient_id, model = model)
+model = load_model(config.RESNET50_MODEL_PATH)
+patient_id = 14191
+img = visualise_breast_tissue(patient_id, model = None)
 plt.imshow(img)
