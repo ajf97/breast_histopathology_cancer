@@ -14,15 +14,21 @@ import numpy as np
 
 
 class HDF5Dataset:
-    def __init__(self, dims, output, datakey="images", bufSize=1000):
+    def __init__(self, dims, output, datakey="images", labelkey="labels",
+                 bufSize=1000, masks=False):
 
         if os.path.exists(output):
             raise ValueError("La ruta de salida ya existe", output)
 
         self.db = h5py.File(output, "w")
         self.data = self.db.create_dataset(datakey, dims, dtype="float")
-        self.labels = self.db.create_dataset("labels", (dims[0], ),
-                                             dtype="int")
+        self.masks = masks
+
+        if self.masks:
+            self.labels = self.db.create_dataset(labelkey, dims, dtype="float")
+        else:
+            self.labels = self.db.create_dataset(labelkey, (dims[0], ),
+                                                 dtype="int")
 
         self.bufSize = bufSize
         self.buffer = {"data": [], "labels": []}
@@ -38,7 +44,12 @@ class HDF5Dataset:
     def flush(self):
         i = self.idx + len(self.buffer["data"])
         self.data[self.idx:i] = np.vstack(self.buffer["data"])
-        self.labels[self.idx:i] = np.array(self.buffer["labels"])
+
+        if self.masks:
+            self.labels[self.idx:i] = np.vstack(self.buffer["labels"])
+        else:
+            self.labels[self.idx:i] = np.array(self.buffer["labels"])
+
         self.idx = i
         self.buffer = {"data": [], "labels": []}
 

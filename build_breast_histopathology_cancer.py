@@ -7,7 +7,6 @@ from config import breast_histopathology_cancer_config as config
 from utilities.hdf5dataset import HDF5Dataset
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
-from sklearn.utils import class_weight
 from imblearn.datasets import make_imbalance
 import numpy as np
 import pandas as pd
