@@ -27,16 +27,6 @@ df_train_cc = df_train_cc.sample(frac=1,
                                  random_state=45).reset_index(drop=True)
 df_test_cc = df_test_cc.sample(frac=1, random_state=45).reset_index(drop=True)
 
-
-# %% Funcion para convertir a escala de grises
-def convert_to_gray_scale(image):
-    image = image.astype("float")
-    image = (np.maximum(image, 0) / image.max()) * 255.0
-    image = np.uint8(image)
-    image = cv2.resize(image, (config.INPUT_SHAPE,
-                               config.INPUT_SHAPE))
-    return image
-
 # %% Función para leer las imágenes
 
 
@@ -66,9 +56,17 @@ def read_images(df, image_paths, mask_paths, num_images):
         image = dicom.dcmread(image_full_path).pixel_array
         mask = dicom.dcmread(mask_full_path).pixel_array
 
-        # Convertir las imágenes a escala de grises
-        image = convert_to_gray_scale(image)
-        mask = convert_to_gray_scale(mask)
+        # Reescalamos las imágenes
+        image = np.uint8(cv2.resize(image, (config.INPUT_SHAPE,
+                                            config.INPUT_SHAPE)))
+        image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
+
+        mask = cv2.resize(mask, (config.INPUT_SHAPE, config.INPUT_SHAPE),
+                          interpolation=cv2.INTER_NEAREST)
+
+
+        # Expandir máscaras para el entrenamiento de la red
+        mask = np.expand_dims(mask, axis=2)
 
         images.append(image)
         masks.append(mask)
@@ -122,8 +120,10 @@ for (dtype, images, masks, hdf5_path) in dataset:
 
     # Crear base de datos hdf5
     hdf5 = HDF5Dataset((len(images), config.INPUT_SHAPE,
-                        config.INPUT_SHAPE), hdf5_path, labelkey="masks",
-                       masks=True)
+                        config.INPUT_SHAPE, 3), hdf5_path, labelkey="masks",
+                       masks=True, dims_mask=(len(masks),
+                                              config.INPUT_SHAPE,
+                                              config.INPUT_SHAPE, 1))
 
     # Mostramos información de progreso por pantalla
     print("[INFO] Creando la base de datos " + dtype)
@@ -136,4 +136,3 @@ for (dtype, images, masks, hdf5_path) in dataset:
         hdf5.add([image], [mask])
 
     hdf5.close()
-

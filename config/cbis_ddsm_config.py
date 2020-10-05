@@ -10,7 +10,7 @@ IMAGE_TRAIN_ROI_PATH = "D://dataset//CBIS-DDSM-TRAIN-ROI//"
 IMAGE_TEST_FULL_PATH = "D://dataset//CBIS-DDSM-TEST-FULL//"
 IMAGE_TEST_ROI_PATH = "D://dataset//CBIS-DDSM-TEST-ROI//"
 
-NUM_CLASSES = 2
+NUM_CLASSES = 1
 NUM_VAL_IMAGES = 50
 NUM_TEST_IMAGES = 50
 NUM_TRAIN_IMAGES = 50
@@ -25,4 +25,4 @@ TRAIN_DATAFRAME = "D://dataset//calc_case_description_train_set.csv"
 TEST_DATAFRAME = "D://dataset//calc_case_description_test_set.csv"
 
 # Resolución
-INPUT_SHAPE = 572
+INPUT_SHAPE = 512
