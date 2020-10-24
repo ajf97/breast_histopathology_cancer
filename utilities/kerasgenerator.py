@@ -57,8 +57,7 @@ class KerasGenerator:
                 if self.data_augmentation is not None:
                     (images, labels) = next(self.data_augmentation.flow(images,
                                                                         labels,
-                                                                        batch_size=self.batch_size,
-                                                                        seed=42))
+                                                                        batch_size=self.batch_size))
 
                 yield (images, labels)
 

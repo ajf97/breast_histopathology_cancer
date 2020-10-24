@@ -27,6 +27,29 @@ df_train_cc = df_train_cc.sample(frac=1,
                                  random_state=45).reset_index(drop=True)
 df_test_cc = df_test_cc.sample(frac=1, random_state=45).reset_index(drop=True)
 
+
+# %% Función para convertir a escala de grises
+
+def convert_to_grayscale(image):
+    image = image.astype("float")
+    image = (np.maximum(image, 0) / image.max()) * 255.0
+    image = np.uint8(image)
+    image = cv2.resize(image, (config.INPUT_SHAPE,
+                               config.INPUT_SHAPE))
+    return image
+
+
+# %% Función para convertir a RGB
+
+def convert_to_RGB(image):
+    image = image.astype("float")
+    image = (np.maximum(image, 0) / image.max()) * 255.0
+    image = np.uint8(image)
+    image = cv2.resize(image, (config.INPUT_SHAPE,
+                               config.INPUT_SHAPE))
+    image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
+    return image
+
 # %% Función para leer las imágenes
 
 
@@ -56,16 +79,14 @@ def read_images(df, image_paths, mask_paths, num_images):
         image = dicom.dcmread(image_full_path).pixel_array
         mask = dicom.dcmread(mask_full_path).pixel_array
 
-        # Reescalamos las imágenes
-        image = np.uint8(cv2.resize(image, (config.INPUT_SHAPE,
-                                            config.INPUT_SHAPE)))
-        image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
-
+        # Convertir las imágenes a RGB
+        #image = convert_to_RGB(image)
+        image = convert_to_grayscale(image)
         mask = cv2.resize(mask, (config.INPUT_SHAPE, config.INPUT_SHAPE),
                           interpolation=cv2.INTER_NEAREST)
 
-
-        # Expandir máscaras para el entrenamiento de la red
+        # Redimensionar imágenes para la entrada de la red
+        image = np.expand_dims(image, axis=2)
         mask = np.expand_dims(mask, axis=2)
 
         images.append(image)
@@ -120,7 +141,7 @@ for (dtype, images, masks, hdf5_path) in dataset:
 
     # Crear base de datos hdf5
     hdf5 = HDF5Dataset((len(images), config.INPUT_SHAPE,
-                        config.INPUT_SHAPE, 3), hdf5_path, labelkey="masks",
+                        config.INPUT_SHAPE, 1), hdf5_path, labelkey="masks",
                        masks=True, dims_mask=(len(masks),
                                               config.INPUT_SHAPE,
                                               config.INPUT_SHAPE, 1))

@@ -13,7 +13,7 @@ IMAGE_TEST_ROI_PATH = "D://dataset//CBIS-DDSM-TEST-ROI//"
 NUM_CLASSES = 1
 NUM_VAL_IMAGES = 50
 NUM_TEST_IMAGES = 50
-NUM_TRAIN_IMAGES = 50
+NUM_TRAIN_IMAGES = 100
 
 # Rutas donde se van a almacenar los archivos HDF5
 TRAIN_HDF5 = "D://dataset//hdf5//train.hdf5"

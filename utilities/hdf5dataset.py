@@ -21,14 +21,15 @@ class HDF5Dataset:
             raise ValueError("La ruta de salida ya existe", output)
 
         self.db = h5py.File(output, "w")
-        self.data = self.db.create_dataset(datakey, dims, dtype="float")
         self.masks = masks
         self.dims_mask = dims_mask
 
         if self.masks:
+            self.data = self.db.create_dataset(datakey, dims, dtype="uint8")
             self.labels = self.db.create_dataset(labelkey, dims_mask,
-                                                 dtype="float")
+                                                 dtype="uint8")
         else:
+            self.data = self.db.create_dataset(datakey, dims, dtype="float")
             self.labels = self.db.create_dataset(labelkey, (dims[0], ),
                                                  dtype="int")
 
