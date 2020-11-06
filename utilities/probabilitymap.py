@@ -30,7 +30,6 @@ def get_patient_df(patient_id):
 
 def visualise_breast_tissue(patient_id, df = df, model = None, crop_dimension = [50,50]):
 
-    # Plotting Settings
     plt.xticks([])
     plt.yticks([])
     plt.axis("off")
@@ -45,7 +44,6 @@ def visualise_breast_tissue(patient_id, df = df, model = None, crop_dimension = 
     # Get the dimensions of the breast tissue image
     max_coord = np.max((p_df.x, p_df.y))
 
-    # Allocate an array to fill image pixels in,use uint8 type as you don't need an int over 255
     grid = 255*np.ones(shape = (max_coord + crop_dimension[0], max_coord + crop_dimension[1], 3)).astype(np.uint8)
     mask = 255*np.ones(shape = (max_coord + crop_dimension[0], max_coord + crop_dimension[1], 3)).astype(np.uint8)
 
@@ -66,6 +64,7 @@ def visualise_breast_tissue(patient_id, df = df, model = None, crop_dimension = 
                 # Set the path with the color if target is cancerous
                 mask[y:y+crop_dimension[1],x:x+crop_dimension[0]] = [0, 255, 0]
 
+    # Apply alpha compositing
     alpha = 0.68
     img = (mask * (1.0 - alpha) + grid * alpha).astype('uint8')
     io.imshow(img)

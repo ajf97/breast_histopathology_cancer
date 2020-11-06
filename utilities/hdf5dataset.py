@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = "Alejandro Jerónimo Fuentes"
-__license__ = "GPL"
-__date__ = "August 2020"
-__status__ = "Development"
+
+# This code is based on Adrian Rosebrock's book: Deep learning for computer vision
 
 # %% Import packages
 
@@ -55,12 +54,6 @@ class HDF5Dataset:
 
         self.idx = i
         self.buffer = {"data": [], "labels": []}
-
-    def storeClassLabels(self, classLabels):
-        dt = h5py.special_dtype(vlen=str)
-        labelSet = self.db.create_dataset("label_names",
-                                          (len(classLabels),), dtype=dt)
-        labelSet[:] = classLabels
 
     def close(self):
         if len(self.buffer["data"]) > 0:

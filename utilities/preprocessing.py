@@ -2,7 +2,6 @@
 __author__ = "Alejandro Jerónimo Fuentes"
 __date__ = "17/08/2020"
 
-from sklearn.feature_extraction.image import extract_patches_2d
 import cv2
 
 
@@ -13,10 +12,10 @@ class MeanRGBPreprocessor:
 
     def preprocess(self, image):
 
-        # Dividir la imagen en canales RGB
+        # Split channels
         (B, G, R) = cv2.split(image.astype("float32"))
 
-        # Restamos los valores de la media a la imagen
+        # Mean subtraction
         B -= self.rgb_values["B"]
         G -= self.rgb_values["G"]
         R -= self.rgb_values["R"]
@@ -24,17 +23,6 @@ class MeanRGBPreprocessor:
         image_merged = cv2.merge([B, G, R])
 
         return cv2.cvtColor(image_merged, cv2.COLOR_BGR2RGB)
-
-
-class RandomCropPreprocessor:
-
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
-
-    def preprocess(self, image):
-        return extract_patches_2d(image, (self.height, self.width),
-                                  patch_size=1)[0]
 
 
 class MeanZeroOnePreprocessor:

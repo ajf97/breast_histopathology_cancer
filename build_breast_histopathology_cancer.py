@@ -2,7 +2,7 @@
 __author__ = "Alejandro Jerónimo Fuentes"
 __date__ = "13/08/2020"
 
-# %% Importar paquetes necesarios
+# %% Import neccesary packages
 from config import breast_histopathology_cancer_config as config
 from utilities.hdf5dataset import HDF5Dataset
 from sklearn.model_selection import train_test_split
@@ -14,12 +14,12 @@ import json
 import cv2
 import os
 
-# %% Obtener rutas de las imágenes y sus etiquetas correspondientes
+# %% Get images and labels path
 
 trainPaths = []
 trainLabels = []
 
-# Definición del dataframe
+# Dataframe definition
 
 df = pd.DataFrame(columns=["patient_id", "x", "y", "target", "path"])
 i = 1
@@ -31,7 +31,7 @@ for root, dirs, files in os.walk(config.IMAGE_PATH):
             filename_path = os.path.join(root, imageFile)
             label = root.split(os.sep)[-1]
 
-            # Parsear nombre de archivo para el dataframe
+            # Parsing files
             filename = filename_path.split("\\")[-1]
             filename = filename.split("_")
 
@@ -47,12 +47,12 @@ for root, dirs, files in os.walk(config.IMAGE_PATH):
 
 df.to_csv(config.DATAFRAME_PATH, index=False)
 
-# %% Normalizar etiquetas
+# %% Label encoding
 
 le = LabelEncoder()
 trainLabels = le.fit_transform(trainLabels)
 
-# %% Balancear clases utilizando under-sampling
+# %% Balancing classes with under-sampling
 
 trainPaths = np.array(trainPaths).reshape((-1, 1))
 trainLabels = np.array(trainLabels)
@@ -63,7 +63,7 @@ X, y = make_imbalance(trainPaths, trainLabels,
 X = X.flatten()
 
 
-# %% Separar las rutas en conjuntos de entrenamiento, prueba y validación
+# %% Split data
 
 split = train_test_split(X, y,
                          test_size=config.NUM_TEST_IMAGES,
@@ -71,7 +71,7 @@ split = train_test_split(X, y,
 
 (trainPaths, testPaths, trainLabels, testLabels) = split
 
-# A continuación, obtenemos el conjunto de validación
+# Split validation set
 
 split = train_test_split(trainPaths, trainLabels,
                          test_size=config.NUM_VAL_IMAGES,
@@ -80,7 +80,7 @@ split = train_test_split(trainPaths, trainLabels,
 
 (trainPaths, valPaths, trainLabels, valLabels) = split
 
-# %% Construcción del dataset
+# %% Dataset construction
 
 dataset = [
     ("train", trainPaths, trainLabels, config.TRAIN_HDF5),
@@ -93,34 +93,33 @@ dataset = [
 
 for (dtype, paths, labels, hdf5_path) in dataset:
 
-    # Crear base de datos hdf5
+    # Create HDF5 database
     hdf5 = HDF5Dataset((len(paths), 50, 50, 3), hdf5_path)
 
-    # Mostramos información de progreso por pantalla
     print("[INFO] Creando la base de datos " + dtype)
 
     for (path, label) in zip(paths, labels):
 
-        # Lectura de la imagen con OpenCV
+        # Read image with OpenCV
         image = cv2.imread(path)
 
-        # Calculamos la media RGB de la imagen
+        # Mean RGB subtraction
         if dtype == "train":
             (b, g, r) = cv2.mean(image)[:3]
             R.append(r)
             G.append(g)
             B.append(b)
 
-        # Convertimos la imagen a RGB
+        # Convert image to RGB
         image = cv2.cvtColor(image, cv2.COLOR_BGRA2RGB)
         image = np.expand_dims(image, axis=0)
 
-        # Escribimos la imagen en la base de datos hdf5
+        # Write image into hdf5 dataset
         hdf5.add([image], [label])
 
     hdf5.close()
 
-# %% Serializamos la normalización RGB
+# %% Serialize mean
 
 print("[INFO] Normalización RGB")
 D = {"R": np.mean(R), "G": np.mean(G), "B": np.mean(B)}

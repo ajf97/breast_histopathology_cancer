@@ -50,7 +50,7 @@ head = FCInception.build(baseModel, 256)
 
 model = Model(inputs=baseModel.input, outputs=head)
 
-# %% Freeze every layer in original VGG16 architecture
+# %% Freeze every layer in original Inception architecture
 
 for layer in baseModel.layers:
     layer.trainable = False

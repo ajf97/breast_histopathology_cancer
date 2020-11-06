@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 __author__ = "Alejandro Jerónimo Fuentes"
-__license__ = "GPL"
 __date__ = "19/08/2020"
-__status__ = "Development"
 
 
 # Load packages

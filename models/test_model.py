@@ -23,7 +23,7 @@ model = load_model(config.RESNET50_MODEL_PATH)
 values_rgb = json.loads(open(config.MEAN_PATH).read())
 
 
-# %% Define preprocessors and generator to use
+# %% Define preprocessors and generator
 
 batch_size = 32
 
@@ -47,7 +47,7 @@ print(classification_report(testY.argmax(axis=1),
                             predictions.argmax(axis=1),
                             target_names=["non-cancer", "cancer"]))
 
-# %% Plot confussioin matrix
+# %% Plot confussion matrix
 
 plot_confusion_matrix(testY.argmax(axis=1),
                       y_pred=predictions.argmax(axis=1))

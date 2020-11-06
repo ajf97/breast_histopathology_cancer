@@ -51,7 +51,7 @@ head = FCResNet.build(baseModel, 256)
 
 model = Model(inputs=baseModel.input, outputs=head)
 
-# %% Freeze every layer in original VGG16 architecture
+# %% Freeze every layer in ResNet architecture
 
 for layer in baseModel.layers:
     layer.trainable = False
