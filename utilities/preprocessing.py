@@ -6,7 +6,6 @@ import cv2
 
 
 class MeanRGBPreprocessor:
-
     def __init__(self, rgb_values):
         self.rgb_values = rgb_values
 
@@ -32,7 +31,6 @@ class MeanZeroOnePreprocessor:
 
 
 class ResizePreprocessor:
-
     def __init__(self, width, height):
         self.width = width
         self.height = height
