@@ -4,8 +4,8 @@ __date__ = "21/08/2020"
 
 # %% Import neccesary packages
 
-from keras.layers.core import Dense, Dropout, Flatten
 from keras.layers import AveragePooling2D
+from keras.layers.core import Dense, Dropout, Flatten
 
 # %% Layer definition
 

@@ -5,10 +5,12 @@ __date__ = "08/10/2020"
 
 # %% Import neccesary packages
 
-from config import tnbc_config as config
-import numpy as np
-import cv2
 import os
+
+import cv2
+import numpy as np
+
+from config import tnbc_config as config
 
 # %% Read images and masks
 
