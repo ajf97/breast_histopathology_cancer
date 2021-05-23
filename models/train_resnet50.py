@@ -4,23 +4,23 @@ __date__ = "17/09/2020"
 
 # %% Import neccesary packages
 
-from keras.applications import ResNet50
-from keras.optimizers import SGD, RMSprop, Adam
-from utilities.fclayer import FCResNet
-from keras.layers import Input
-from keras.models import Model
-from utilities.kerasgenerator import KerasGenerator
-from keras.preprocessing.image import ImageDataGenerator
+import json
+
 import config.breast_histopathology_cancer_config as config
-import utilities.preprocessing as preprocessors
 import matplotlib.pylab as plt
 import numpy as np
-import json
+import utilities.preprocessing as preprocessors
+from keras.applications import ResNet50
+from keras.layers import Input
+from keras.models import Model
+from keras.optimizers import Adam
+from keras.preprocessing.image import ImageDataGenerator
+from utilities.fclayer import FCResNet
+from utilities.kerasgenerator import KerasGenerator
 
 # %% Load values RGB
 
 values_rgb = json.loads(open(config.MEAN_PATH).read())
-
 
 
 # %% Define preprocessors and generators
@@ -28,24 +28,34 @@ values_rgb = json.loads(open(config.MEAN_PATH).read())
 batch_size = 64
 number_epochs = 20
 
-aug = ImageDataGenerator(horizontal_flip=True,
-                         vertical_flip=True,
-                         rotation_range=30,
-                         zoom_range=[0.5, 1.0]
-                         )
+aug = ImageDataGenerator(
+    horizontal_flip=True,
+    vertical_flip=True,
+    rotation_range=30,
+    zoom_range=[0.5, 1.0],
+)
 
 
 rp = preprocessors.ResizePreprocessor(224, 224)
 mrgb = preprocessors.MeanRGBPreprocessor(values_rgb)
 
-trainGen = KerasGenerator(config.TRAIN_HDF5, batch_size,
-                          preprocessors=[rp, mrgb], data_augmentation=aug)
+trainGen = KerasGenerator(
+    config.TRAIN_HDF5,
+    batch_size,
+    preprocessors=[rp, mrgb],
+    data_augmentation=aug,
+)
 valGen = KerasGenerator(config.VAL_HDF5, batch_size, preprocessors=[rp, mrgb])
 
 # %% Define base model
 
-baseModel = ResNet50(weights="imagenet", include_top=False,
-                     input_tensor=Input(shape=(224, 224, 3)))
+baseModel = ResNet50(
+    weights="imagenet",
+    include_top=False,
+    input_tensor=Input(
+        shape=(224, 224, 3),
+    ),
+)
 
 head = FCResNet.build(baseModel, 256)
 
@@ -59,20 +69,24 @@ for layer in baseModel.layers:
 # %% Compile the new model
 
 opt = Adam(lr=1e-4, decay=1e-4 / number_epochs)
-model.compile(loss="categorical_crossentropy", optimizer=opt,
-              metrics=["accuracy"])
+model.compile(
+    loss="categorical_crossentropy",
+    optimizer=opt,
+    metrics=["accuracy"],
+)
 
 # %% Training model
 
 print("[INFO] Training Model")
-H1 = model.fit(trainGen.generate_image_batch(),
-               steps_per_epoch=trainGen.num_images // batch_size,
-               validation_data=valGen.generate_image_batch(),
-               validation_steps=valGen.num_images // batch_size,
-               epochs=number_epochs,
-               max_queue_size=batch_size * 2,
-               verbose=1
-               )
+H1 = model.fit(
+    trainGen.generate_image_batch(),
+    steps_per_epoch=trainGen.num_images // batch_size,
+    validation_data=valGen.generate_image_batch(),
+    validation_steps=valGen.num_images // batch_size,
+    epochs=number_epochs,
+    max_queue_size=batch_size * 2,
+    verbose=1,
+)
 
 # %% Save model
 
@@ -82,14 +96,18 @@ model.save(config.RESNET50_MODEL_PATH)
 
 plt.style.use("ggplot")
 plt.figure()
-plt.plot(np.arange(0, number_epochs), H1.history["loss"],
-         label="train_loss")
-plt.plot(np.arange(0, number_epochs), H1.history["val_loss"],
-         label="val_loss")
-plt.plot(np.arange(0, number_epochs), H1.history["accuracy"],
-         label="train_acc")
-plt.plot(np.arange(0, number_epochs), H1.history["val_accuracy"],
-         label="val_acc")
+plt.plot(np.arange(0, number_epochs), H1.history["loss"], label="train_loss")
+plt.plot(np.arange(0, number_epochs), H1.history["val_loss"], label="val_loss")
+plt.plot(
+    np.arange(0, number_epochs),
+    H1.history["accuracy"],
+    label="train_acc",
+)
+plt.plot(
+    np.arange(0, number_epochs),
+    H1.history["val_accuracy"],
+    label="val_acc",
+)
 plt.title("Pérdida de entrenamiento y accuracy de la primera fase")
 plt.xlabel("Epoch")
 plt.ylabel("Loss/Accuracy")

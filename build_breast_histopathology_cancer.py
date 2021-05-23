@@ -2,17 +2,19 @@
 __author__ = "Alejandro Jerónimo Fuentes"
 __date__ = "13/08/2020"
 
+import json
+import os
+
+import cv2
+import numpy as np
+import pandas as pd
+from imblearn.datasets import make_imbalance
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+
 # %% Import neccesary packages
 from config import breast_histopathology_cancer_config as config
 from utilities.hdf5dataset import HDF5Dataset
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
-from imblearn.datasets import make_imbalance
-import numpy as np
-import pandas as pd
-import json
-import cv2
-import os
 
 # %% Get images and labels path
 
@@ -57,26 +59,31 @@ trainLabels = le.fit_transform(trainLabels)
 trainPaths = np.array(trainPaths).reshape((-1, 1))
 trainLabels = np.array(trainLabels)
 
-X, y = make_imbalance(trainPaths, trainLabels,
-                      sampling_strategy={0: 10000, 1: 10000},
-                      random_state=42)
+
+X, y = make_imbalance(
+    trainPaths,
+    trainLabels,
+    sampling_strategy={0: 10000, 1: 10000},
+    random_state=42,
+)
 X = X.flatten()
 
 
 # %% Split data
 
-split = train_test_split(X, y,
-                         test_size=config.NUM_TEST_IMAGES,
-                         stratify=y)
+split = train_test_split(X, y, test_size=config.NUM_TEST_IMAGES, stratify=y)
 
 (trainPaths, testPaths, trainLabels, testLabels) = split
 
 # Split validation set
 
-split = train_test_split(trainPaths, trainLabels,
-                         test_size=config.NUM_VAL_IMAGES,
-                         stratify=trainLabels,
-                         random_state=42)
+split = train_test_split(
+    trainPaths,
+    trainLabels,
+    test_size=config.NUM_VAL_IMAGES,
+    stratify=trainLabels,
+    random_state=42,
+)
 
 (trainPaths, valPaths, trainLabels, valLabels) = split
 
@@ -85,8 +92,8 @@ split = train_test_split(trainPaths, trainLabels,
 dataset = [
     ("train", trainPaths, trainLabels, config.TRAIN_HDF5),
     ("test", testPaths, testLabels, config.TEST_HDF5),
-    ("val", valPaths, valLabels, config.VAL_HDF5)
-    ]
+    ("val", valPaths, valLabels, config.VAL_HDF5),
+]
 
 (R, G, B) = ([], [], [])
 

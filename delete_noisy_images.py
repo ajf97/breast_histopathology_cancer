@@ -5,9 +5,11 @@ __date__ = "21/08/2020"
 
 # %% Import neccesary packages
 
-import config.breast_histopathology_cancer_config as config
-import cv2
 import os
+
+import cv2
+
+import config.breast_histopathology_cancer_config as config
 
 # %% Remove images with different shape to 50x50
 
@@ -17,5 +19,5 @@ for root, dirs, files in os.walk(config.IMAGE_PATH):
             file = os.path.join(root, imageFile)
             image = cv2.imread(file)
 
-            if (image.shape[0] != 50 or image.shape[1] != 50):
+            if image.shape[0] != 50 or image.shape[1] != 50:
                 os.remove(file)

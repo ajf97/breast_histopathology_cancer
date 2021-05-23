@@ -16,7 +16,8 @@ VAL_HDF5 = "C://Users//ajf97//Documents//TFG//dataset//hdf5//val.hdf5"
 
 
 # Ruta para almacenar los ficheros de salida
-OUTPUT_PATH = "C://Users//ajf97//Documents//TFG//breast_histopathology_cancer//output"
+OUTPUT_PATH = "C://Users//ajf97//Documents//TFG//breast_histopathology_cancer\
+              //output"
 
 # Ruta del archivo de la media RGB del dataset
 MEAN_PATH = OUTPUT_PATH + "//breast_histopathology_cancer_mean.json"
