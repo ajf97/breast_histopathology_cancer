@@ -1,8 +1,7 @@
 <h1 align="center">Deep Learning techniques for breast cancer detection 👋</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-v1.0.0-blue.svg?cacheSeconds=2592000" />
-    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/ajf97/
-breast_histopathology_cancer">
+  <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/ajf97/breast_histopathology_cancer">
   <a href="https://ajf97.github.io/blog/assets/pdf/T%C3%A9cnicas_de_deep_learning_para_diagn%C3%B3stico_de_c%C3%A1ncer_de_mama.pdf" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
